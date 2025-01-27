@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.tracker {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.stats p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.history {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.history ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.history li {
+    background-color: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="tracker">
+        <h1>Fitness Tracker</h1>
+        <div class="stats">
+            <p>Heart Rate: <span id="heartRate">0</span> bpm</p>
+            <p>Temperature: <span id="temperature">0</span> °C</p>
+            <p>Blood Pressure: <span id="bloodPressure">120/80</span> mmHg</p>
+            <p>Blood Oxygen: <span id="bloodOxygen">0</span> %</p>
+            <p>Sleeping: <span id="sleeping">0</span> hours</p>
+        </div>
+        <button id="startBtn">Start Tracking</button>
+        
+        <div class="history">
+            <h2>Tracking History</h2>
+            <ul id="historyList">
+                <!-- History entries will go here -->
+            </ul>
+        </div>
+    </div>
+    <script>
+        let heartRate = 75;
+let temperature = 36.5;
+let bloodPressure = '120/80';
+let bloodOxygen = 98;
+let sleeping = 0;
+let history = [];
+let timer;
+let tracking = false;
+
+const startBtn = document.getElementById('startBtn');
+const heartRateDisplay = document.getElementById('heartRate');
+const temperatureDisplay = document.getElementById('temperature');
+const bloodPressureDisplay = document.getElementById('bloodPressure');
+const bloodOxygenDisplay = document.getElementById('bloodOxygen');
+const sleepingDisplay = document.getElementById('sleeping');
+const historyList = document.getElementById('historyList');
+
+// Start/Stop Tracking
+startBtn.addEventListener('click', () => {
+    if (!tracking) {
+        tracking = true;
+        startBtn.textContent = 'Stop Tracking';
+        startTracking();
+    } else {
+        tracking = false;
+        startBtn.textContent = 'Start Tracking';
+        stopTracking();
+    }
+});
+
+function startTracking() {
+    timer = setInterval(() => {
+        heartRate = 60 + Math.floor(Math.random() * 20); // Simulate heart rate (60-80 bpm)
+        temperature = 36.0 + Math.random() * 1; // Simulate body temperature (36.0°C to 37.0°C)
+        bloodPressure = `${120 + Math.floor(Math.random() * 20)}/${80 + Math.floor(Math.random() * 10)}`; // Simulate blood pressure (120/80)
+        bloodOxygen = 95 + Math.floor(Math.random() * 5); // Simulate blood oxygen level (95-100%)
+        sleeping = Math.floor(Math.random() * 8); // Simulate hours of sleep (0-8 hours)
+
+        // Update UI
+        heartRateDisplay.textContent = heartRate;
+        temperatureDisplay.textContent = temperature.toFixed(1);
+        bloodPressureDisplay.textContent = bloodPressure;
+        bloodOxygenDisplay.textContent = bloodOxygen;
+        sleepingDisplay.textContent = sleeping;
+
+    }, 2000); // Update every 2 seconds
+}
+
+function stopTracking() {
+    clearInterval(timer);
+
+    // Save current data to history
+    const currentData = {
+        heartRate,
+        temperature: temperature.toFixed(1),
+        bloodPressure,
+        bloodOxygen,
+        sleeping
+    };
+
+    history.push(currentData);
+    updateHistory();
+}
+
+function updateHistory() {
+    historyList.innerHTML = ''; // Clear the history list
+    history.forEach((entry, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <strong>Session ${index + 1}:</strong><br>
+            Heart Rate: ${entry.heartRate} bpm | Temperature: ${entry.temperature}°C | 
+            Blood Pressure: ${entry.bloodPressure} | Blood Oxygen: ${entry.bloodOxygen}% | 
+            Sleeping: ${entry.sleeping} hours
+        `;
+        historyList.appendChild(li);
+    });
+}
+
+    </script>
+</body>
+</html>
